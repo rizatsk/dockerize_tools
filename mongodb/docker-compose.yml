@@ -1,0 +1,22 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: 'mongodb'
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: whoami
+      MONGO_INITDB_ROOT_PASSWORD: sdi20d81!#ro2nf10mdps0=1komspalc]qwl1
+    restart: always
+    networks:
+      - whoami-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  whoami-network:
+    external: true
