@@ -1,0 +1,41 @@
+apiVersion: v1alpha1
+kind: Installation
+metadata:
+  name: signoz
+spec:
+  deployment:
+    flavor: compose
+    mode: docker
+
+  # Podman: image harus fully-qualified (docker.io/...) supaya tidak kena short-name prompt
+  signoz:
+    spec:
+      image: docker.io/signoz/signoz:latest
+  ingester:
+    spec:
+      image: docker.io/signoz/signoz-otel-collector:latest
+  telemetrystore:
+    spec:
+      image: docker.io/clickhouse/clickhouse-server:25.12.5
+  telemetrykeeper:
+    kind: clickhousekeeper
+    spec:
+      image: docker.io/clickhouse/clickhouse-keeper:25.12.5
+  metastore:
+    kind: postgres
+    spec:
+      image: docker.io/library/postgres:16
+
+  # Bind port hanya ke localhost, sama seperti service lain di repo ini
+  patches:
+    - target: "deployment/compose.yaml"
+      operations:
+        - op: replace
+          path: /services/signoz-signoz-0/ports
+          value:
+            - "127.0.0.1:8080:8080"
+        - op: replace
+          path: /services/ingester/ports
+          value:
+            - "127.0.0.1:4317:4317"
+            - "127.0.0.1:4318:4318"
