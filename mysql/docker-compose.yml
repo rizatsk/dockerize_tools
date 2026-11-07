@@ -1,0 +1,21 @@
+services:
+   mysql:
+    image: mysql:9.7.1
+    container_name: 'mysql'
+    ports:
+      - "127.0.0.1:3306:3306"
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql9283rj2093d0sad23idoksa!d28392lsq3s
+    networks:
+      - whoami-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  whoami-network:
+    external: true
